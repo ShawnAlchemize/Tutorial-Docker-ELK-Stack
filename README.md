@@ -116,7 +116,7 @@ Add/uncomment the following lines:
 	http.port:9200
 	discovery.type: single-node
 ```
-![image](https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/c0795d9d-a965-47b3-b58d-022cfbbc8286)
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/c0795d9d-a965-47b3-b58d-022cfbbc8286" height="250" >
 
 As we're using `discovery.type: single-node`, comment out the following line at the bottom of the file:
 ```bash
@@ -132,7 +132,7 @@ Set the heap size by uncommenting the following lines. Here, I've configured it 
 -Xms4g
 -Xmx4g
 ```
-![image](https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/f72aff41-499a-4ba2-aa3f-4eaa09d32793)
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/f72aff41-499a-4ba2-aa3f-4eaa09d32793" height="250" >
 
 ### Start Elasticsearch
 
@@ -166,7 +166,7 @@ There are many more possible roles available, but we're sticking with the same r
 ### Test Elasticsearch
 In  `/etc/elasticsearch/elasticsearch.yml`, if `xpack.security.enabled: true`: (default)
 This means that security is enabled.
-![image](https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b02e433b-b9d3-4c66-aeff-a194263f579b)
+<img src="hhttps://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b02e433b-b9d3-4c66-aeff-a194263f579b" height="250" >
 
 ```bash
 curl -k -u elastic:<generated-password> https://localhost:9200
