@@ -166,7 +166,8 @@ There are many more possible roles available, but we're sticking with the same r
 ### Test Elasticsearch
 In  `/etc/elasticsearch/elasticsearch.yml`, if `xpack.security.enabled: true`: (default)
 This means that security is enabled.
-<img src="hhttps://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b02e433b-b9d3-4c66-aeff-a194263f579b" height="250" >
+
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b02e433b-b9d3-4c66-aeff-a194263f579b" height="250" >
 
 ```bash
 curl -k -u elastic:<generated-password> https://localhost:9200
