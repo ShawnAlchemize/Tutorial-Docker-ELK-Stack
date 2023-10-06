@@ -1,4 +1,4 @@
-#How To Install Elasticsearch, Logstash, and Kibana (Elastic Stack) in a WSL Docker container (Ubuntu 20.04)
+# How To Install Elasticsearch, Logstash, and Kibana (Elastic Stack) in a WSL Docker container (Ubuntu 20.04)
 
 In this document, you'll learn how to set up an ELK stack in a docker container running Ubuntu 20.04. These steps are applicable to setup ELK on WSL2 as well, with minimal adjustments - just skip installing docker.
 
