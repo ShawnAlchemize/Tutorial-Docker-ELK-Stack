@@ -55,7 +55,7 @@ sudo docker start elk-stack
 sudo docker exec -it elk-stack /bin/bash
 ```
 
-####Prepare the environment:
+#### Prepare the environment:
 ```bash
 apt update && apt upgrade -y && apt-get install nginx -y && apt-get install wget -y && apt-get install gpg -y && apt-get install nano -y && apt install systemctl -y && apt install curl -y && apt install net-tools -y
 ```
@@ -72,16 +72,17 @@ sudo apt install rsyslog
 ##### Step 2: Enable Command Logging in the Shell
 1. Open the `.bashrc` file in a text editor. You can use `nano` or any other text editor of your choice.
 ```bash
-nano /etc/bashrc
+	nano /etc/bashrc
 ```
 2. Add the following line at the end of the file to set the `PROMPT_COMMAND` environment variable. This command will log every command to syslog as it's executed.
 ```bash
-PROMPT_COMMAND='history -a >(logger -t "[$USER] $SSH_CONNECTION")'
+	PROMPT_COMMAND='history -a >(logger -t "[$USER] $SSH_CONNECTION")'
 ```
 3. Save the file and exit the text editor. (for nano: ctrl-s + ctrl-x)
+
 4. To apply the changes immediately, you need to source the `.bashrc` file:
 ```bash
-source ~/.bashrc
+	source ~/.bashrc
 ```
 
 #####  Step 3: View Command Logs
@@ -123,7 +124,7 @@ As we're using `discovery.type: single-node`, comment out the following line at 
 ```
 By default, JVM heap size is set at 1GB.
 ```bash
-	nano /etc/elasticsearch/jvm.options
+nano /etc/elasticsearch/jvm.options
 ```
 It is recommended to set it to no more than half the size of your total memory. 
 Set the heap size by uncommenting the following lines. Here, I've configured it to be 4GB:
@@ -131,6 +132,8 @@ Set the heap size by uncommenting the following lines. Here, I've configured it 
 -Xms4g
 -Xmx4g
 ```
+![image](https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/f72aff41-499a-4ba2-aa3f-4eaa09d32793)
+
 ### Start Elasticsearch
 
 #### As ELK stack is being set up on Docker or if is being set up as Root user in WSL2, do this first to avoid file access permission errors:
@@ -170,7 +173,7 @@ curl -k -u elastic:<generated-password> https://localhost:9200
 # OR
 curl -k -u <your-username>:<password> https://localhost:9200
 ```
-In  `/etc/elasticsearch/elasticsearch.yml`, if `xpack.security.enabled: false`: 
+Else if, in  `/etc/elasticsearch/elasticsearch.yml`, if `xpack.security.enabled: false`: 
 This means that security is disabled.
 ```bash
 curl -X GET "localhost:9200"
