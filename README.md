@@ -24,7 +24,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 
 ## Open a terminal in WSL:
-Pull an ubuntu:20.04 image from [Docker's IOfficial Images](https://hub.docker.com/_/ubuntu "Docker's IOfficial Images"):
+Pull an ubuntu:20.04 image from [Docker's Official Images](https://hub.docker.com/_/ubuntu "Docker's IOfficial Images"):
 ```bash
 sudo docker pull ubuntu:20.04
 ```
