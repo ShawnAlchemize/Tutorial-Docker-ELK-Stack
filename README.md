@@ -133,6 +133,7 @@ Set the heap size by uncommenting the following lines. Here, I've configured it 
 -Xms4g
 -Xmx4g
 ```
+
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/f72aff41-499a-4ba2-aa3f-4eaa09d32793" height="250" >
 
 ### Start Elasticsearch
@@ -160,7 +161,7 @@ Press 'Y' to print the password in terminal when prompted. This will be your `el
 ### Add a Superuser account:
 As the generated password might be difficult to remember and inconvenient to log in with later, we'll create a supeuser role account. 
 ```bash
-/usr/share/elasticsearch/bin/elasticsearch-users useradd <your-username> -p <your-username> -r superuser
+/usr/share/elasticsearch/bin/elasticsearch-users useradd <your-newacct-username> -p <your-newacct-password> -r superuser
 ```
 There are many more possible roles available, but we're sticking with the same role as `elastic` user. 
 
@@ -173,7 +174,7 @@ This means that security is enabled.
 ```bash
 curl -k -u elastic:<generated-password> https://localhost:9200
 # OR
-curl -k -u <your-username>:<password> https://localhost:9200
+curl -k -u <your-newacct-username>:<your-newacct-password> https://localhost:9200
 ```
 Else if, in  `/etc/elasticsearch/elasticsearch.yml`, if `xpack.security.enabled: false`: 
 This means that security is disabled.
