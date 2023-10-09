@@ -116,7 +116,8 @@ Add/uncomment the following lines:
 	http.port:9200
 	discovery.type: single-node
 ```
-	<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/c0795d9d-a965-47b3-b58d-022cfbbc8286" height="250" >
+
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/c0795d9d-a965-47b3-b58d-022cfbbc8286" height="250" >
 
 
 As we're using `discovery.type: single-node`, comment out the following line at the bottom of the file:
