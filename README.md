@@ -287,7 +287,7 @@ output {
 }
 ```
 
-#### Alternatively, if you prefer only 1 single config file:
+### Alternatively, if you prefer only 1 single config file:
 `/etc/logstash/conf.d/logstash-simple.conf`
 ```bash
 input {
