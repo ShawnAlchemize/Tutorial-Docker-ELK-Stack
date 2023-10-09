@@ -200,9 +200,9 @@ systemctl status kibana
 ```
 
 ### Test Kibana
-Inside Docker terminal: `curl -k -u <your-newacct-username>:<your-newacct-password> "https://localhost:5601"`
+Inside Docker terminal: `curl -k -u <your-newacct-username>:<your-newacct-password> "localhost:5601"`
 
-In WSL terminal: `curl -k -u <your-newacct-username>:<your-newacct-password> "https://<Your-Docker-IP-Address:5601"`
+In WSL terminal: `curl -k -u <your-newacct-username>:<your-newacct-password> "<Your-Docker-IP-Address:5601"`
 
 ### Enroll Kibana
 **On Windows host machine:** In a local web browser -- visit `localhost:5601`
