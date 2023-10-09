@@ -112,9 +112,9 @@ apt-get install elasticsearch -y
 ```
 Add/uncomment the following lines:
 
-`	network.host: localhost`
-`	http.port:9200`
-`	discovery.type: single-node`
+`network.host: localhost`
+`http.port:9200`
+`discovery.type: single-node`
 
 
 As we're using `discovery.type: single-node`, comment out the following line at the bottom of the file:
