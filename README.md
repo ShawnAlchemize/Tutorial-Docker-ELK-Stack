@@ -323,10 +323,13 @@ There are many different beats available, such as Filebeat, Winlogbeat, Metricbe
 apt-get install filebeat
 nano /etc/filebeat/filebeat.yml
 ```
+
 ##### Filebeats input section
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b427a3db-e171-4028-8856-615ac62dd765" height="250" >
+
 ##### Filebeat modules section
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/caf4300c-d694-4ab1-8916-b9b6eebea632" height="250" >
+
 ##### Kibana section
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/a8e6f6fb-b7df-45ae-a0fc-9ba3b2c9e91f" height="250" >
 
