@@ -72,7 +72,7 @@ sudo apt install rsyslog
 ##### Step 2: Enable Command Logging in the Shell
 1. Open the `.bashrc` file in a text editor. You can use `nano` or any other text editor of your choice.
 ```bash
-	nano /etc/bashrc
+	nano ~/.bashrc
 ```
 2. Add the following line at the end of the file to set the `PROMPT_COMMAND` environment variable. This command will log every command to syslog as it's executed.
 ```bash
