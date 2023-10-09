@@ -111,16 +111,15 @@ apt-get install elasticsearch -y
 	nano /etc/elasticsearch/elasticsearch.yml
 ```
 Add/uncomment the following lines:
-```bash
-	network.host: localhost
-	http.port:9200
-	discovery.type: single-node
-```
+
+`	network.host: localhost`
+`	http.port:9200`
+`	discovery.type: single-node`
+
 
 As we're using `discovery.type: single-node`, comment out the following line at the bottom of the file:
-```bash
-#cluster.initial_master_nodes: ["……"]
-```
+`#cluster.initial_master_nodes: ["……"]`
+
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/c0795d9d-a965-47b3-b58d-022cfbbc8286" height="250" >
 
 By default, JVM heap size is set at 1GB.
@@ -129,10 +128,8 @@ nano /etc/elasticsearch/jvm.options
 ```
 It is recommended to set it to no more than half the size of your total memory. 
 Set the heap size by uncommenting the following lines. Here, I've configured it to be 4GB:
-```bash
--Xms4g
--Xmx4g
-```
+`-Xms4g`
+`-Xmx4g`
 
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/f72aff41-499a-4ba2-aa3f-4eaa09d32793" height="250" >
 
@@ -158,7 +155,7 @@ systemctl status elasticsearch.service
 ```
 Press 'Y' to print the password in terminal when prompted. This will be your `elastic` user password.
 
-### Add a Superuser account:
+### Add a Superuser account
 As the generated password might be difficult to remember and inconvenient to log in with later, we'll create a supeuser role account. 
 ```bash
 /usr/share/elasticsearch/bin/elasticsearch-users useradd <your-newacct-username> -p <your-newacct-password> -r superuser
@@ -183,14 +180,267 @@ curl -X GET "localhost:9200"
 ```
 The name of your system should display, and elasticsearch for the cluster name. This indicates that Elasticsearch is functional and is listening on port 9200.
 
+## Install Kibana 
+```bash
+apt-get install kibana
+nano /etc/kibana/kibana.yml
+```
+Edit the following lines:
+`server.port: 5601`
+`server.host: "0.0.0.0"`
+`elasticsearch.host: ["http://localhost:9200"]`
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/572ad956-3f44-408a-a8c8-9104de653d88" height="250" >
 
 
+Then start Kibana:
+```bash
+systemctl start kibana
+systemctl enable kibana
+systemctl status kibana
+```
+
+### Test Kibana
+Inside Docker terminal: `curl -X GET "localhost:5601"`
+In WSL terminal: `curl -X GET "172.17.0.2:5601"`
+
+### Enroll Kibana
+**On Windows host machine:** In a local web browser -- visit `localhost:5601`
+**Inside Docker terminal: **
+```bash 
+	/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token --scope kibana
+		#<obtain an enrollment token>
+```
+Paste the enrollment token in the web browser on your local Windows machine.
+
+**Inside Docker terminal:**
+Run the following command for verification code:
+```bash
+/usr/share/kibana/bin/kibana-verification-code
+```
+Paste the verification code in the web browser on your local Windows machine.
+
+### Login into Kibana
+Use the `elastic` account or the `new superuser` account and its corresponding password that you've created previously.
+
+## Install Logstash
+```bash
+apt-get install logstash
+systemctl start logstash
+systemctl enable logstash
+systemctl status logstash
+chmod 777 -R /usr/share/logstash/ # Optional; for file permissions issues.
+```
+### All custom Logstash configuration files are stored in:
+`/etc/logstash/conf.d/`
+
+### Example configuration files (separated):
+`nano /etc/logstash/conf.d/02-beats-input.conf`
+```bash
+input {
+  beats {
+    port => 5044
+  }
+}
+```
+`nano /etc/logstash/conf.d/10-syslog-filter.conf`
+```bash
+filter {
+    if [fileset][module] == "system" {
+        grok {
+            match => { "message" => "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} %{GREEDYMULTILINE:[system][auth][message]}" }
+            pattern_definitions => { "GREEDYMULTILINE" => "(.|\n)*" }
+            remove_field => "message"
+        }
+        date {
+            match => [ "[system][auth][timestamp]", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
+        }
+        geoip {
+            source => "[system][auth][ssh][ip]"
+            target => "[system][auth][ssh][geoip]"
+        }
+    }
+    else if [fileset][name] == "syslog" {
+        grok {
+            match => { "message" => "%{SYSLOGTIMESTAMP:[system][syslog][timestamp]} %{SYSLOGHOST:[system][syslog][hostname]} %{GREEDYMULTILINE:[system][syslog][message]}" }
+            pattern_definitions => { "GREEDYMULTILINE" => "(.|\n)*" }
+            remove_field => "message"
+        }
+        date {
+            match => [ "[system][syslog][timestamp]", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
+        }
+    }
+}
+```
+
+`nano /etc/logstash/conf.d/30-elasticsearch-output.conf`
+Modify according to your username and password.
+```bash
+output {
+  elasticsearch {
+    hosts => [ "https://localhost:9200" ]
+    ssl_certificate_verification => false
+    user => "elastic" # or your new super user account
+    password => "<your-password>" # enter your password
+    manage_template => false
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+  }
+}
+```
+
+#### Alternatively, if you prefer only 1 single config file:
+`/etc/logstash/conf.d/logstash-simple.conf`
+```bash
+input {
+    beats {
+        port => "5044"
+    }
+}
+filter {
+    grok {
+        match => { "message" => "%{COMBINEDAPACHELOG}"}
+    }
+}
+output {
+    elasticsearch {
+        hosts => [ "https://localhost:9200" ]
+        ssl_certificate_verification => false
+        user => "elastic"
+        password => "aBp71qQxflISz457T5W0"
+    }
+}
+```
+### Test Logstash
+Running as logstash user:
+```bash
+su -s /bin/bash -c '/usr/share/logstash/bin/logstash --path.settings /etc/logstash -t' logstash
+```
+
+# Setting up Beats
+There are many different beats available, such as Filebeat, Winlogbeat, Metricbeat and Packetbeat. For this tutorial, we'll be using Filebeat. We'll be sending logs to Logstash instead of Elasticsearch via Filebeats. 
+
+## Install Filebeat
+```bash
+apt-get install filebeat
+nano /etc/filebeat/filebeat.yml
+```
+##### Filebeats input section
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/b427a3db-e171-4028-8856-615ac62dd765" height="250" >
+##### Filebeat modules section
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/caf4300c-d694-4ab1-8916-b9b6eebea632" height="250" >
+##### Kibana section
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/a8e6f6fb-b7df-45ae-a0fc-9ba3b2c9e91f" height="250" >
+
+##### Outputs section
+Under the Elasticsearch output section, comment out the following lines:
+`# output.elasticsearch:`
+`# Array of hosts to connect to.`
+`# hosts: ["localhost:9200"]`
+##### Logstash Output section
+Under the Logstash output section, remove the hash sign (#) in the following two lines:
+`output.logstash`
+`hosts: ["localhost:5044"]`
+
+##### *note: if sending to Elasticsearch instead of Logstash, requires the following commands:
+```bash
+filebeat setup -e
+```
+### List of enabled/disabled modules
+```bash
+filebeat modules list
+# OR
+ls -l /etc/filebeat/modules.d
+```
+
+### To disable a module
+```bash
+filebeat modules disable <module-name.yml>
+# OR
+mv /etc/filebeat/modules.d/<module-name.yml> /etc/filebeat/modules.d/ <module-name.yml>.disabled
+```
+
+### In our tutorial, we'll enable system.yml module
+```bash
+filebeat modules enable system
+nano /etc/filebeat/filebeat.yml
+```
+In Filebeats Input section: `enabled: false`
+```bash
+nano /etc/filebeat/modules.d/system.yml
+```
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/46c0316e-dea7-42ab-9de4-0d806a84b5e8" height="250" >
 
 
+```bash
+filebeat modules enable system
+filebeat test config
+systemctl start filebeat
+```
 
+# Verifying ELK + Filebeat
+If you’ve set up your Elastic Stack correctly, Filebeat will begin shipping your syslog and authorization logs to Logstash, which will then load that data into Elasticsearch.
 
+To verify that Elasticsearch is indeed receiving this data, query the Filebeat index with this command:
+```bash
+curl -k -u elastic:aBp71qQxflISz457T5W0 https://localhost:9200/filebeat-*/_search?pretty
+```
 
+# Systemctl Commands
+```bash
+systemctl start nginx elasticsearch kibana logstash filebeat
+systemctl status nginx elasticsearch kibana logstash filebeat
+systemctl enable nginx elasticsearch kibana logstash filebeat
+systemctl restart nginx elasticsearch kibana logstash filebeat
+```
 
+# Troubleshooting Commands:
+## .yml configs
+```bash
+nano /etc/filebeat/filebeat.yml
+nano /etc/kibana/kibana.yml
+nano /etc/logstash/logstash.yml
+nano /etc/elasticsearch/elasticsearch.yml
+```
+## Display error logs:
+```bash
+cat /var/log/filebeat/*.ndjson
+cat /var/log/kibana/kibana.log
+cat /var/log/logstash/logstash-plain.log
+cat /var/log/elasticsearch/elasticsearch.log
+```
+## List indexes:
+```bash
+curl -k -u elastic:<password> https://localhost:9200/_cat/indices?v&s=index&pretty
+```
+Or in Kibana: Dev Tools > Console > `GET "/_cat/indices?v&s=index&pretty"`
 
-
-
+## Possible Elastic account roles:
+	1) reporting_user
+	2) logstash_admin
+	3) machine_learning_admin
+	4) kibana_user
+	5) rollup_user
+	6) rollup_admin
+	7) remote_monitoring_collector
+	8) superuser
+	9) transport_client
+	10) viewer
+	11) kibana_admin
+	12) watcher_admin
+	13) remote_monitoring_agent
+	14) monitoring_user
+	15) ingest_admin
+	16) transform_admin
+	17) logstash_system
+	18) apm_user
+	19) watcher_user
+	20) beats_system
+	21) data_frame_transforms_user
+	22) snapshot_user
+	23) beats_admin
+	24) apm_system
+	25) kibana_system
+	26) enrich_user
+	27) machine_learning_user
+	28) transform_user
+	29) data_frame_transforms_admin
+	30) editor
