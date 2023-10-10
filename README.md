@@ -400,6 +400,17 @@ To verify that Elasticsearch is indeed receiving this data, query the Filebeat i
 curl -k -u <username>:<password> https://localhost:9200/filebeat-*/_search?pretty
 ```
 
+# Setup view in Kibana
+Kibana main menu and selecting Stack Management > Kibana: Data Views > Create data view
+
+You should be able to see a filebeat index. Set a name (eg. Filebeat) and the index pattern: `filebeats-*`
+
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/38689b5a-cfcd-446f-8855-9e00694d4cd1" height="250" >
+
+Save.
+
+Then, Kibana Menu > Discover > Dropdown: choose Filebeat (or whatever name you've given).
+
 # Systemctl Commands
 ```bash
 systemctl start nginx elasticsearch kibana logstash filebeat
