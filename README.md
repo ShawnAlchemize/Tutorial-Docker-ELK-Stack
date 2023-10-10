@@ -284,7 +284,9 @@ filter {
 ```
 
 `nano /etc/logstash/conf.d/30-elasticsearch-output.conf`
-Modify according to your username and password.
+
+*IMPORTANT!! - Modify according to your username and password.*
+
 ```bash
 output {
   elasticsearch {
@@ -316,7 +318,7 @@ output {
         hosts => [ "https://localhost:9200" ]
         ssl_certificate_verification => false
         user => "elastic"
-        password => "aBp71qQxflISz457T5W0"
+        password => "<password>"
     }
 }
 ```
@@ -395,7 +397,7 @@ If you’ve set up your Elastic Stack correctly, Filebeat will begin shipping yo
 
 To verify that Elasticsearch is indeed receiving this data, query the Filebeat index with this command:
 ```bash
-curl -k -u elastic:aBp71qQxflISz457T5W0 https://localhost:9200/filebeat-*/_search?pretty
+curl -k -u <username>:<password> https://localhost:9200/filebeat-*/_search?pretty
 ```
 
 # Systemctl Commands
