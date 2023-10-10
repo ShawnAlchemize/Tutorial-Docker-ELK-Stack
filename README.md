@@ -189,6 +189,7 @@ Edit the following lines:
 `server.port: 5601`
 `server.host: "0.0.0.0"`
 `elasticsearch.host: ["http://localhost:9200"]`
+
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/572ad956-3f44-408a-a8c8-9104de653d88" height="250" >
 
 
@@ -236,6 +237,7 @@ chmod 777 -R /usr/share/logstash/ # Optional; for file permissions issues.
 
 ### Configure logstash.yml
 `nano /etc/logstash/logstash.yml`
+
 Uncomment the two lines: `pipeline.batch.size: 125` and `pipeline.batch.delay: 50`
 
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/d77ad44a-398b-4ebe-b994-237befff0696" height="250" >
