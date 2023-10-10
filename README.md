@@ -234,6 +234,12 @@ chmod 777 -R /usr/share/logstash/ # Optional; for file permissions issues.
 ### All custom Logstash configuration files are stored in:
 `/etc/logstash/conf.d/`
 
+### Configure logstash.yml
+`nano /etc/logstash/logstash.yml`
+Uncomment the two lines: `pipeline.batch.size: 125` and `pipeline.batch.delay: 50`
+
+<img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/d77ad44a-398b-4ebe-b994-237befff0696" height="250" >
+
 ### Example configuration files (separated):
 `nano /etc/logstash/conf.d/02-beats-input.conf`
 ```bash
