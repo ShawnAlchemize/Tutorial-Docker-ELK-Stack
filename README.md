@@ -240,6 +240,8 @@ chmod 777 -R /usr/share/logstash/ # Optional; for file permissions issues.
 
 Uncomment the two lines: `pipeline.batch.size: 125` and `pipeline.batch.delay: 50`
 
+And add this line: `path.config: /etc/logstash/conf.d`
+
 <img src="https://github.com/ShawnAlchemize/Docker-ELK-Stack-Tutorial/assets/33109120/d77ad44a-398b-4ebe-b994-237befff0696" height="250" >
 
 ### Example configuration files (separated):
